@@ -154,7 +154,7 @@
         function fetchDiscordStatus() {
             // 前の古い中継システムを全部ゴミ箱にポイして、一番エラーが起きない特別な通信方法にしたよ！
             const script = document.createElement('script');
-            script.src = 'https://discord.com/WZKux5PtJM';
+            script.src = 'https://discord.com/api/guilds/1519978268147581110/widget.json?callback=processDiscordData';
             
             // 古い通信用のタグが残っていたら消す（ゴミ掃除）
             const oldScript = document.getElementById('discord-jsonp-script');
