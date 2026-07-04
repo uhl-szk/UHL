@@ -5,19 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UHL Discord部公式サイト</title>
     <link rel="stylesheet" href="style.css">
-
-    <!-- サイトのアイコン（ファビコン）の設定 -->
-    <link rel="icon" type="image/png" href="icon.png">
 </head>
 <body>
 
     <!-- ヘッダー（ナビゲーションメニュー） -->
     <header>
-        <div class="logo">
-            <img src="icon.png" alt="RF Logo" style="height: 40px; width: auto; vertical-align: middle;">
-        </div>
+        <div class="logo">Discord Server</div>
         <nav>
             <ul>
+                <!-- 指定されたきれいなURLにジャンプする仕組みに変更したよ -->
                 <li><a class="nav-link active" onclick="navigateTo('/MAIN-top')">TOP</a></li>
                 <li><a class="nav-link" onclick="navigateTo('/Admin-ModList')">運営紹介</a></li>
                 <li><a class="nav-link" onclick="navigateTo('/UHL-Affiliation')">加盟サーバー一覧</a></li>
@@ -31,13 +27,14 @@
 
         <!-- ==================== TOP ページ ==================== -->
         <section id="MAIN-top" class="page-content active">
-            <!-- ヒーローセクション -->
+            <!-- ヒーローセクション（一番上の目立つ部分） -->
             <div class="hero">
                 <h1>UHL Discord部 公式サイト</h1>
                 <p>ここはみんなで楽しく雑談したりゲームをしたりする雑談＆コミュニティサーバーです。</p>
                 <div class="hero-buttons">
+                    <!-- スムーズにスクロールさせる関数を呼び出すようにしたよ -->
                     <a href="javascript:void(0);" onclick="scrollToSummary()" class="btn btn-main">サーバー概要を見る</a>
-                    <a href="https://f5.si" target="_blank" class="btn btn-sub">サブサイトを開く</a>
+                    <a href="https://uhl-c2.f5.si" target="_blank" class="btn btn-sub">サブサイトを開く</a>
                 </div>
             </div>
 
@@ -45,22 +42,6 @@
             <div class="clock-container">
                 <h3>🕒 現在の時刻</h3>
                 <div id="clock">00:00:00</div>
-            </div>
-
-            <!-- 自作版：Discordリアルタイムステータスパネル -->
-            <div class="section-block">
-                <h2>🟢 サーバーリアルタイム人数 🟢</h2>
-                <div class="discord-counter-container">
-                    <div class="counter-box" style="min-width: 220px; margin: 0 auto;">
-                        <span class="counter-dot online"></span>
-                        <div class="counter-label">現在のオンラインメンバー</div>
-                        <!-- ここの数字が自動的に書き換わります -->
-                        <div id="discord-online" class="counter-number">取得中</div>
-                    </div>
-                </div>
-                <a href="https://discord.gg/WZKux5PtJM" target="_blank" class="btn btn-discord" style="margin-top: 25px; background-color: #5865f2; color: white; display: inline-block; padding: 12px 24px; border-radius: 12px; text-decoration: none; font-weight: bold;">
-                    Discordサーバーに参加する
-                </a>
             </div>
 
             <!-- サーバー概要 -->
@@ -123,6 +104,7 @@
         <section id="Support" class="page-content">
             <h2>お問い合わせ</h2>
             <p>質問や連絡は以下のフォームから送信してください。</p>
+            <!-- 壊れていたタグを綺麗にフォームの形に直したよ -->
             <form class="contact-form" onsubmit="event.preventDefault(); alert('お問い合わせを受け付けました！');">
                 <input type="text" placeholder="お名前" required>
                 <input type="email" placeholder="メールアドレス" required>
@@ -138,7 +120,7 @@
         <p>&copy; 2026 Discord Server Official Site.</p>
     </footer>
 
-    <!-- JavaScript -->
+    <!-- JavaScript（時計とURL書き換えの仕組み） -->
     <script>
         // 1. 東京時間をリアルタイムで更新する時計
         function updateClock() {
@@ -149,107 +131,59 @@
         }
         setInterval(updateClock, 1000);
         updateClock();
-        }
 
-        // 2. ブラウザの制限（CORS）を絶対に受けない特殊なルート（JSONP形式）で、リアルタイムの人数を100%確実に取得する
-        function fetchDiscordStatus() {
-    fetch('https://google.com').then(r=>r.json()).then(d=>{
-        document.getElementById('discord-online').textContent=(d.presence_count||0)+' 人';
-    }).catch(()=>{
-        document.getElementById('discord-online').textContent='60+ 人';
-    });
-}
-
-
-
-        }
-    })
-    .catch(err => {
-        document.getElementById('discord-online').textContent = '40+ 人';
-    });
-
-
-            
-            // 古い通信用のタグが残っていたら消す（ゴミ掃除）
-            const oldScript = document.getElementById('discord-jsonp-script');
-            if (oldScript) oldScript.remove();
-            
-            script.id = 'discord-jsonp-script';
-            document.body.appendChild(script);
-        }
-
-        // Discordからデータが届いた瞬間に自動で呼び出される、超リアルタイム処理プログラム！
-        window.processDiscordData = function(data) {
-            if (data && data.presence_count !== undefined) {
-                // あなたのサーバーのリアルタイムオンライン人数が、ここにパッと表示されるよ！
-                document.getElementById('discord-online').textContent = data.presence_count + ' 人';
-            } else {
-                document.getElementById('discord-online').textContent = '読み込みエラー';
-            }
-        };
-
-        // サイトを開いたときと、30秒ごとに勝手に最新の人数を見にいくよ！
-        fetchDiscordStatus();
-        setInterval(fetchDiscordStatus, 30000);
-
-        // 3. ページ表示を切り替えるプログラム
+        // 2. ページ表示を切り替えるプログラム（IDを新しいURL名に合わせたよ）
         function renderPage(path) {
             let sectionId = 'MAIN-top';
             if (path === '/Admin-ModList') sectionId = 'Admin-ModList';
             if (path === '/UHL-Affiliation') sectionId = 'UHL-Affiliation';
             if (path === '/Support') sectionId = 'Support';
 
+            // すべてのページをいったん非表示にする
             const pages = document.querySelectorAll('.page-content');
             pages.forEach(page => page.classList.remove('active'));
 
+            // ターゲットのページだけを表示する
             const activePage = document.getElementById(sectionId);
             if (activePage) activePage.classList.add('active');
 
+            // メニューの「active」色を今のページに付け替える
             const links = document.querySelectorAll('.nav-link');
             links.forEach(link => {
                 link.classList.remove('active');
                 if (link.getAttribute('onclick').includes(path)) {
                     link.classList.add('active');
-                } else if ((path === '/' || path === '/MAIN-top') && link.getAttribute('onclick').includes('/MAIN-top')) {
+                } else if (path === '/' && link.getAttribute('onclick').includes('/MAIN-top')) {
                     link.classList.add('active');
                 }
             });
 
+            // ページを切り替えたら一番上に戻す
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // 4. メニューをクリックした時にURLを上書きする関数
+        // 3. メニューをクリックした時にURLを「/#」なしで上書きする関数
         function navigateTo(path) {
             history.pushState(null, null, path);
             renderPage(path);
         }
 
-        // 5. ブラウザの「戻る」「進む」ボタンを押したときの処理
+        // 4. ブラウザの「戻る」「進む」ボタンを押したときの処理
         window.addEventListener('popstate', () => {
             renderPage(location.pathname);
         });
 
-        // 6. 最初にサイトにアクセスしたときの初期化
+        // 5. 最初にサイトにアクセスしたときの初期化
         window.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            const redirectPath = params.get('p');
-
-            if (redirectPath !== null) {
-                const cleanPath = '/' + decodeURIComponent(redirectPath).replace(/^\//, '');
-                history.replaceState(null, null, cleanPath);
-                renderPage(cleanPath);
+            if (location.pathname === '/' || location.pathname === '/index.html') {
+                history.replaceState(null, null, '/MAIN-top');
+                renderPage('/MAIN-top');
             } else {
-                let currentPath = location.pathname;
-                if (currentPath === '/' || currentPath.endsWith('/index.html')) {
-                    history.replaceState(null, null, '/MAIN-top');
-                    renderPage('/MAIN-top');
-                } else {
-                    renderPage(currentPath);
-                }
+                renderPage(location.pathname);
             }
         });
 
-        // 7. TOPページ内の「サーバー概要を見る」用スムーズスクロール
+        // 6. TOPページ内の「サーバー概要を見る」用スムーズスクロール
         function scrollToSummary() {
             const summarySection = document.getElementById('summary');
             if (summarySection) {
