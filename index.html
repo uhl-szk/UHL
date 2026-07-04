@@ -14,6 +14,7 @@
     <!-- ヘッダー（ナビゲーションメニュー） -->
     <header>
         <div class="logo">
+            <!-- 画像の名前が完全に「icon.png」であれば、ここに表示されるよ！ -->
             <img src="icon.png" alt="RF Logo" style="height: 40px; width: auto; vertical-align: middle;">
         </div>
         <nav>
@@ -37,7 +38,7 @@
                 <p>ここはみんなで楽しく雑談したりゲームをしたりする雑談＆コミュニティサーバーです。</p>
                 <div class="hero-buttons">
                     <a href="javascript:void(0);" onclick="scrollToSummary()" class="btn btn-main">サーバー概要を見る</a>
-                    <a href="https://uhl-c2.f5.si" target="_blank" class="btn btn-sub">サブサイトを開く</a>
+                    <a href="https://f5.si" target="_blank" class="btn btn-sub">サブサイトを開く</a>
                 </div>
             </div>
 
@@ -51,15 +52,10 @@
             <div class="section-block">
                 <h2>🟢 LIVE SERVER STATUS</h2>
                 <div class="discord-counter-container">
-                    <div class="counter-box">
+                    <div class="counter-box" style="min-width: 220px; margin: 0 auto;">
                         <span class="counter-dot online"></span>
-                        <div class="counter-label">オンライン</div>
+                        <div class="counter-label">現在のオンラインメンバー</div>
                         <div id="discord-online" class="counter-number">--</div>
-                    </div>
-                    <div class="counter-box">
-                        <span class="counter-dot total"></span>
-                        <div class="counter-label">総メンバー数</div>
-                        <div id="discord-total" class="counter-number">--</div>
                     </div>
                 </div>
                 <a href="https://dsc.gg/ref-sv" target="_blank" class="btn btn-discord" style="margin-top: 25px; background-color: #5865f2; color: white; display: inline-block; padding: 12px 24px; border-radius: 12px; text-decoration: none; font-weight: bold;">
@@ -73,7 +69,7 @@
                 <div class="features">
                     <div class="feature-card">
                         <h3>💬 楽しい雑談</h3>
-                        <p>いつでも誰かと話せるテキストチャンネルがあります。</p>
+                        <p>24時間いつでも誰かと話せるテキストチャンネルがあります。</p>
                     </div>
                     <div class="feature-card">
                         <h3>🎮 ゲームマッチング</h3>
@@ -154,23 +150,23 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // 2. DiscordのAPIから人数を直接ひっぱってくるプログラム
+        // 2. 教えてもらったサーバーID「1519978268147581110」を使ってオンライン人数を確実に取得
         async function fetchDiscordStatus() {
             try {
-                const response = await fetch('https://discord.com');
-                if (!response.ok) throw new Error('Network error');
-                const data = await response.json();
+                const proxyUrl = 'https://allorigins.win';
+                const discordApiUrl = encodeURIComponent('https://discord.com');
                 
+                const response = await fetch(proxyUrl + discordApiUrl);
+                if (!response.ok) throw new Error('Network error');
+                
+                const wrapper = await response.json();
+                const data = JSON.parse(wrapper.contents);
+                
+                // 正しいオンライン人数を画面にセット
                 document.getElementById('discord-online').textContent = data.presence_count || '0';
-                if (data.members) {
-                    document.getElementById('discord-total').textContent = data.members.length;
-                } else {
-                    document.getElementById('discord-total').textContent = '取得中';
-                }
             } catch (error) {
                 console.error('Discordデータの取得に失敗:', error);
-                document.getElementById('discord-online').textContent = 'Error';
-                document.getElementById('discord-total').textContent = 'Error';
+                document.getElementById('discord-online').textContent = 'Offline';
             }
         }
         fetchDiscordStatus();
@@ -213,20 +209,16 @@
             renderPage(location.pathname);
         });
 
-        // 6. 最初にサイトにアクセスしたときの初期化（独自ドメイン404転送・無限ループ完全対策版）
+        // 6. 最初にサイトにアクセスしたときの初期化
         window.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
             const redirectPath = params.get('p');
 
             if (redirectPath !== null) {
-                // 404.html から転送されてきたパスを綺麗にデコード
                 const cleanPath = '/' + decodeURIComponent(redirectPath).replace(/^\//, '');
-                
-                // URLから邪魔なパラメータ「?p=...」を消し去って、超綺麗なURLにする
                 history.replaceState(null, null, cleanPath);
                 renderPage(cleanPath);
             } else {
-                // 通常アクセス
                 let currentPath = location.pathname;
                 if (currentPath === '/' || currentPath.endsWith('/index.html')) {
                     history.replaceState(null, null, '/MAIN-top');
@@ -237,7 +229,7 @@
             }
         });
 
-                // 7. TOPページ内の「サーバー概要を見る」用スムーズスクロール
+        // 7. TOPページ内の「サーバー概要を見る」用スムーズスクロール
         function scrollToSummary() {
             const summarySection = document.getElementById('summary');
             if (summarySection) {
