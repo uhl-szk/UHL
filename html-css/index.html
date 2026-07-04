@@ -62,7 +62,7 @@
                         <div id="discord-total" class="counter-number">--</div>
                     </div>
                 </div>
-                <a href="https://discord.gg" target="_blank" class="btn btn-discord" style="margin-top: 25px; background-color: #5865f2; color: white; display: inline-block;">
+                <a href="https://discord.gg" target="_blank" class="btn btn-discord" style="margin-top: 25px; background-color: #5865f2; color: white; display: inline-block; padding: 12px 24px; border-radius: 12px; text-decoration: none; font-weight: bold;">
                     Discordサーバーに参加する
                 </a>
             </div>
@@ -71,7 +71,6 @@
             <div id="summary" class="section-block">
                 <h2>サーバー概要</h2>
                 <div class="features">
-                    <div class="features">
                     <div class="feature-card">
                         <h3>💬 楽しい雑談</h3>
                         <p>24時間いつでも誰かと話せるテキストチャンネルがあります。</p>
@@ -143,7 +142,7 @@
         <p>&copy; 2026 Discord Server Official Site.</p>
     </footer>
 
-    <!-- JavaScript（時計・URL書き換え・Discord人数自動取得） -->
+    <!-- JavaScript（時計とURL書き換えの仕組み） -->
     <script>
         // 1. 東京時間をリアルタイムで更新する時計
         function updateClock() {
@@ -155,20 +154,14 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // ★新機能：DiscordのAPIから人数を直接ひっぱってくるプログラム
+        // 2. DiscordのAPIから人数を直接ひっぱってくるプログラム
         async function fetchDiscordStatus() {
             try {
-                // あなたのサーバーのJSON APIからデータを取得
                 const response = await fetch('https://discord.com');
                 if (!response.ok) throw new Error('Network error');
-                
                 const data = await response.json();
                 
-                // 画面の数字を書き換える
                 document.getElementById('discord-online').textContent = data.presence_count || '0';
-                
-                // DiscordのAPI制限で合計人数が取れない場合の対策（概算またはメンバーリスト数）
-                // ウィジェットの仕様上、表示されている「オンライン＋オフラインの登録者」を計算
                 if (data.members) {
                     document.getElementById('discord-total').textContent = data.members.length;
                 } else {
@@ -180,11 +173,10 @@
                 document.getElementById('discord-total').textContent = 'Error';
             }
         }
-        // 最初と、1分ごとに人数を更新する
         fetchDiscordStatus();
         setInterval(fetchDiscordStatus, 60000);
 
-        // 2. ページ表示を切り替えるプログラム
+        // 3. ページ表示を切り替えるプログラム
         function renderPage(path) {
             let sectionId = 'MAIN-top';
             if (path === '/Admin-ModList') sectionId = 'Admin-ModList';
@@ -210,36 +202,35 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // 3. メニューをクリックした時にURLを上書きする関数
+        // 4. メニューをクリックした時にURLを上書きする関数
         function navigateTo(path) {
             history.pushState(null, null, path);
             renderPage(path);
         }
 
-        // 4. ブラウザの「戻る」「進む」ボタンを押したときの処理
+        // 5. ブラウザの「戻る」「進む」ボタンを押したときの処理
         window.addEventListener('popstate', () => {
             renderPage(location.pathname);
         });
 
-        // 5. 最初にサイトにアクセスしたときの初期化
+        // 6. 最初にサイトにアクセスしたときの初期化
         window.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            const redirectPath = params.get('p');
-
-            if (redirectPath !== null) {
-                const cleanPath = '/' + decodeURIComponent(redirectPath).replace(/^\//, '');
-                history.replaceState(null, null, cleanPath);
-                renderPage(cleanPath);
+            let currentPath = location.pathname;
+            if (currentPath === '/' || currentPath.endsWith('/index.html')) {
+                history.replaceState(null, null, '/MAIN-top');
+                renderPage('/MAIN-top');
             } else {
-                let currentPath = location.pathname;
-                if (currentPath === '/' || currentPath.endsWith('/index.html')) {
-                    history.replaceState(null, null, '/MAIN-top');
-                    renderPage('/MAIN-top');
-                } else {
-                    renderPage(currentPath);
-                }
+                renderPage(currentPath);
             }
         });
 
-        // 6. TOPページ内の「サーバー概要を見る」用スムーズスクロール
+        // 7. TOPページ内の「サーバー概要を見る」用スムーズスクロール
         function scrollToSummary() {
+            const summarySection = document.getElementById('summary');
+            if (summarySection) {
+                summarySection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+    </script>
+</body>
+</html>
