@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UHL Discord部公式サイト</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ヘッダー（ナビゲーションメニュー） -->
+    <header>
+        <div class="logo">Discord Server</div>
+        <nav>
+            <ul>
+                <li><a href="#" class="nav-link active" onclick="showPage('top')">TOP</a></li>
+                <li><a href="#" class="nav-link" onclick="showPage('staff')">運営紹介</a></li>
+                <li><a href="#" class="nav-link" onclick="showPage('servers')">加盟サーバー一覧</a></li>
+                <li><a href="#" class="nav-link" onclick="showPage('contact')">お問い合わせ</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- 主なコンテンツエリア -->
+    <main>
+
+        <!-- ==================== TOP ページ ==================== -->
+        <section id="top-page" class="page-content active">
+            <!-- ヒーローセクション（一番上の目立つ部分） -->
+            <div class="hero">
+                <h1>UHL Discord部 公式サイト</h1>
+                <p>ここはみんなで楽しく雑談したりゲームをしたりする雑談＆コミュニティサーバーです。</p>
+                <div class="hero-buttons">
+                    <a href="#summary" class="btn btn-main">サーバー概要を見る</a>
+                    <a href="https://uhl-c2.f5.si" target="_blank" class="btn btn-sub">サブサイトを開く</a>
+                </div>
+            </div>
+
+            <!-- リアルタイム時計 -->
+            <div class="clock-container">
+                <h3>🕒 現在の時刻</h3>
+                <div id="clock">00:00:00</div>
+            </div>
+
+            <!-- サーバー概要 -->
+            <div id="summary" class="section-block">
+                <h2>サーバー概要</h2>
+                <div class="features">
+                    <div class="feature-card">
+                        <h3>💬 楽しい雑談</h3>
+                        <p>24時間いつでも誰かと話せるテキストチャンネルがあります。</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🎮 ゲームマッチング</h3>
+                        <p>流行りのゲームを一緒に遊ぶ仲間がすぐに見つかります。</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>🔰 初心者大歓迎</h3>
+                        <p>Discordの使い方が分からない人でも優しくサポートします。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- サーバー運営（簡易版） -->
+            <div class="section-block">
+                <h2>サーバー運営</h2>
+                <p>このサーバーは、以下の頼れるメンバーで管理・運営されています！</p>
+                <div class="staff-summary">
+                    <div class="staff-dot">👑 オーナー</div>
+                    <div class="staff-dot">🛠️ 上位運営</div>
+                    <div class="staff-dot">🛠️ 下位運営</div>
+                </div>
+                <button class="btn btn-main" onclick="showPage('staff')" style="margin-top: 20px;">詳しい運営紹介を見る</button>
+            </div>
+        </section>
+
+        <!-- ==================== 運営紹介 ページ ==================== -->
+        <section id="staff-page" class="page-content">
+            <h2>運営紹介</h2>
+            <p>私たちのサーバーを支えるスタッフメンバーです。</p>
+            <div class="page-card">
+                <h3>👑 管理人（Owner）</h3>
+                <p>このサーバーを作った人。趣味は雑談と夜更かしです！</p>
+            </div>
+            <div class="page-card">
+                <h3>🛠️ モデレーター（Staff）</h3>
+                <p>text</p>
+            </div>
+        </section>
+
+        <!-- ==================== 加盟サーバー一覧 ページ ==================== -->
+        <section id="servers-page" class="page-content">
+            <h2>加盟サーバー一覧</h2>
+            <p>一緒に協力している提携・加盟サーバーの一覧です。</p>
+            <div class="page-card">
+                <h3>🌐 有志ゲームコミュニティサーバー</h3>
+                <p>お互いにイベントを行ったり、プレイヤーの交流をしています。</p>
+            </div>
+        </section>
+
+        <!-- ==================== お問い合わせ ページ ==================== -->
+        <section id="contact-page" class="page-content">
+            <h2>お問い合わせ</h2>
+            <p>質問やコラボレーションの提案などは、以下のフォームまたはDiscordのDMまで！</p>
+            <form class="contact-form" onsubmit="event.preventDefault(); alert('デモ送信しました！');">
+                <input type="text" placeholder="お名前" required>
+                <input type="email" placeholder="メールアドレス" required>
+                <textarea placeholder="お問い合わせ内容" rows="5" required></textarea>
+                <button type="submit" class="btn btn-main">送信する</button>
+            </form>
+        </section>
+
+    </main>
+
+    <!-- フッター -->
+    <footer>
+        <p>&copy; 2026 Discord Server Official Site.</p>
+    </footer>
+
+    <!-- JavaScript（時計とページ切り替えの仕組み） -->
+    <script>
+        // 1. 東京時間をリアルタイムで更新する時計
+        function updateClock() {
+            const now = new Date();
+            // 東京の時間を取得
+            const options = { timeZone: 'Asia/Tokyo', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+            const timeString = now.toLocaleTimeString('ja-JP', options);
+            document.getElementById('clock').textContent = timeString;
+        }
+        setInterval(updateClock, 1000); // 1秒ごとに実行
+        updateClock(); // 最初に1回実行しておく
+
+        // 2. ページを切り替える仕組み
+        function showPage(pageId) {
+            // すべてのページを非表示にする
+            const pages = document.querySelectorAll('.page-content');
+            pages.forEach(page => page.classList.remove('active'));
+
+            // すべてのメニューの「アクティブ色」を消す
+            const links = document.querySelectorAll('.nav-link');
+            links.forEach(link => link.classList.remove('active'));
+
+            // クリックされたページとメニューだけを表示・アクティブにする
+            document.getElementById(pageId + '-page').classList.add('active');
+            
+            // メニューの文字色を変えるための処理
+            event.target.classList.add('active');
+
+            // ページを切り替えたら一番上までスクロールする
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
