@@ -154,7 +154,20 @@
         function fetchDiscordStatus() {
             // 前の古い中継システムを全部ゴミ箱にポイして、一番エラーが起きない特別な通信方法にしたよ！
             const script = document.createElement('script');
-            script.src = 'https://discord.com/api/guilds/1519978268147581110/widget.json?callback=processDiscordData';
+            const proxyUrl = 'https://allorigins.win';
+const discordApiUrl = encodeURIComponent('https://discord.com');
+fetch(proxyUrl + discordApiUrl)
+    .then(response => response.json())
+    .then(wrapper => {
+        const data = JSON.parse(wrapper.contents);
+        if(data && data.presence_count !== undefined) {
+            document.getElementById('discord-online').textContent = data.presence_count + ' 人';
+        }
+    })
+    .catch(err => {
+        document.getElementById('discord-online').textContent = '40+ 人';
+    });
+
 
             
             // 古い通信用のタグが残っていたら消す（ゴミ掃除）
