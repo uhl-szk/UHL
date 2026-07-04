@@ -37,7 +37,7 @@
                 <p>ここはみんなで楽しく雑談したりゲームをしたりする雑談＆コミュニティサーバーです。</p>
                 <div class="hero-buttons">
                     <a href="javascript:void(0);" onclick="scrollToSummary()" class="btn btn-main">サーバー概要を見る</a>
-                    <a href="https://f5.si" target="_blank" class="btn btn-sub">サブサイトを開く</a>
+                    <a href="https://uhl-c2.f5.si" target="_blank" class="btn btn-sub">サブサイトを開く</a>
                 </div>
             </div>
 
@@ -213,18 +213,31 @@
             renderPage(location.pathname);
         });
 
-        // 6. 最初にサイトにアクセスしたときの初期化
+        // 6. 最初にサイトにアクセスしたときの初期化（独自ドメイン404転送・無限ループ完全対策版）
         window.addEventListener('DOMContentLoaded', () => {
-            let currentPath = location.pathname;
-            if (currentPath === '/' || currentPath.endsWith('/index.html')) {
-                history.replaceState(null, null, '/MAIN-top');
-                renderPage('/MAIN-top');
+            const params = new URLSearchParams(window.location.search);
+            const redirectPath = params.get('p');
+
+            if (redirectPath !== null) {
+                // 404.html から転送されてきたパスを綺麗にデコード
+                const cleanPath = '/' + decodeURIComponent(redirectPath).replace(/^\//, '');
+                
+                // URLから邪魔なパラメータ「?p=...」を消し去って、超綺麗なURLにする
+                history.replaceState(null, null, cleanPath);
+                renderPage(cleanPath);
             } else {
-                renderPage(currentPath);
+                // 通常アクセス
+                let currentPath = location.pathname;
+                if (currentPath === '/' || currentPath.endsWith('/index.html')) {
+                    history.replaceState(null, null, '/MAIN-top');
+                    renderPage('/MAIN-top');
+                } else {
+                    renderPage(currentPath);
+                }
             }
         });
 
-        // 7. TOPページ内の「サーバー概要を見る」用スムーズスクロール
+                // 7. TOPページ内の「サーバー概要を見る」用スムーズスクロール
         function scrollToSummary() {
             const summarySection = document.getElementById('summary');
             if (summarySection) {
