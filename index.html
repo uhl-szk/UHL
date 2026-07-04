@@ -154,7 +154,8 @@
         function fetchDiscordStatus() {
             // 前の古い中継システムを全部ゴミ箱にポイして、一番エラーが起きない特別な通信方法にしたよ！
             const script = document.createElement('script');
-           fetch('https://google.com').then(r=>r.json()).then(d=>{document.getElementById('discord-online').textContent=(d.presence_count||0)+' 人';}).catch(()=>{document.getElementById('discord-online').textContent='40+ 人';});
+           fetch('https://discord.com').then(r=>r.json()).then(d=>{document.getElementById('discord-online').textContent=(d.presence_count||0)+' 人';}).catch(()=>{document.getElementById('discord-online').textContent='40+ 人';});
+
 
 
         }
