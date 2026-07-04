@@ -5,15 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UHL Discord部公式サイト</title>
     <link rel="stylesheet" href="style.css">
+
+    <!-- サイトのアイコン（ファビコン）の設定 -->
+    <link rel="icon" type="image/png" href="icon.png">
 </head>
 <body>
 
     <!-- ヘッダー（ナビゲーションメニュー） -->
     <header>
-        <div class="logo">Discord Server</div>
+        <!-- 左上のロゴを文字からオシャレなアイコン画像に変えたよ！ -->
+        <div class="logo">
+            <img src="icon.png" alt="RF Logo" style="height: 40px; width: auto; vertical-align: middle;">
+        </div>
         <nav>
             <ul>
-                <!-- 指定されたきれいなURLにジャンプする仕組みに変更したよ -->
+                <!-- 指定されたきれいなURLにジャンプする仕組み -->
                 <li><a class="nav-link active" onclick="navigateTo('/MAIN-top')">TOP</a></li>
                 <li><a class="nav-link" onclick="navigateTo('/Admin-ModList')">運営紹介</a></li>
                 <li><a class="nav-link" onclick="navigateTo('/UHL-Affiliation')">加盟サーバー一覧</a></li>
@@ -32,9 +38,8 @@
                 <h1>UHL Discord部 公式サイト</h1>
                 <p>ここはみんなで楽しく雑談したりゲームをしたりする雑談＆コミュニティサーバーです。</p>
                 <div class="hero-buttons">
-                    <!-- スムーズにスクロールさせる関数を呼び出すようにしたよ -->
                     <a href="javascript:void(0);" onclick="scrollToSummary()" class="btn btn-main">サーバー概要を見る</a>
-                    <a href="https://uhl-c2.f5.si" target="_blank" class="btn btn-sub">サブサイトを開く</a>
+                    <a href="https://f5.si" target="_blank" class="btn btn-sub">サブサイトを開く</a>
                 </div>
             </div>
 
@@ -104,7 +109,6 @@
         <section id="Support" class="page-content">
             <h2>お問い合わせ</h2>
             <p>質問や連絡は以下のフォームから送信してください。</p>
-            <!-- 壊れていたタグを綺麗にフォームの形に直したよ -->
             <form class="contact-form" onsubmit="event.preventDefault(); alert('お問い合わせを受け付けました！');">
                 <input type="text" placeholder="お名前" required>
                 <input type="email" placeholder="メールアドレス" required>
@@ -132,7 +136,7 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // 2. ページ表示を切り替えるプログラム（IDを新しいURL名に合わせたよ）
+        // 2. ページ表示を切り替えるプログラム
         function renderPage(path) {
             let sectionId = 'MAIN-top';
             if (path === '/Admin-ModList') sectionId = 'Admin-ModList';
@@ -153,7 +157,7 @@
                 link.classList.remove('active');
                 if (link.getAttribute('onclick').includes(path)) {
                     link.classList.add('active');
-                } else if (path === '/' && link.getAttribute('onclick').includes('/MAIN-top')) {
+                } else if ((path === '/' || path === '/MAIN-top') && link.getAttribute('onclick').includes('/MAIN-top')) {
                     link.classList.add('active');
                 }
             });
@@ -162,7 +166,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // 3. メニューをクリックした時にURLを「/#」なしで上書きする関数
+        // 3. メニューをクリックした時にURLを上書きする関数
         function navigateTo(path) {
             history.pushState(null, null, path);
             renderPage(path);
@@ -173,13 +177,28 @@
             renderPage(location.pathname);
         });
 
-        // 5. 最初にサイトにアクセスしたときの初期化
+        // 5. 最初にサイトにアクセスしたときの初期化（GitHub Pagesの無限ループ防止修正版）
         window.addEventListener('DOMContentLoaded', () => {
-            if (location.pathname === '/' || location.pathname === '/index.html') {
-                history.replaceState(null, null, '/MAIN-top');
-                renderPage('/MAIN-top');
+            const params = new URLSearchParams(window.location.search);
+            const redirectPath = params.get('p');
+
+            if (redirectPath !== null) {
+                // 404.html から転送されてきた場合
+                const cleanPath = '/' + decodeURIComponent(redirectPath).replace(/^\//, '');
+                
+                // URLから「?p=...」のパラメータを完全に消し去って、綺麗なURLに書き換える
+                history.replaceState(null, null, cleanPath);
+                renderPage(cleanPath);
             } else {
-                renderPage(location.pathname);
+                // 通常アクセスの場合
+                let currentPath = location.pathname;
+                
+                if (currentPath === '/' || currentPath.endsWith('/index.html')) {
+                    history.replaceState(null, null, '/MAIN-top');
+                    renderPage('/MAIN-top');
+                } else {
+                    renderPage(currentPath);
+                }
             }
         });
 
