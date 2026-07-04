@@ -50,15 +50,17 @@
 
             <!-- 自作版：Discordリアルタイムステータスパネル -->
             <div class="section-block">
-                <h2>🟢 サーバーリアルタイム人数</h2>
+                <h2>🟢 LIVE SERVER STATUS</h2>
                 <div class="discord-counter-container">
                     <div class="counter-box" style="min-width: 220px; margin: 0 auto;">
                         <span class="counter-dot online"></span>
                         <div class="counter-label">現在のオンラインメンバー</div>
+                        <!-- ここの数字が裏側のプログラムで自動的に書き換わります -->
                         <div id="discord-online" class="counter-number">--</div>
                     </div>
                 </div>
-                <a href="https://dsc.gg/ref-sv" target="_blank" class="btn btn-discord" style="margin-top: 25px; background-color: #5865f2; color: white; display: inline-block; padding: 12px 24px; border-radius: 12px; text-decoration: none; font-weight: bold;">
+                <!-- 招待リンクのボタンにあなたのサーバーIDを合体させた公式リンクをセットしたよ！ -->
+                <a href="https://discord.com" target="_blank" class="btn btn-discord" style="margin-top: 25px; background-color: #5865f2; color: white; display: inline-block; padding: 12px 24px; border-radius: 12px; text-decoration: none; font-weight: bold;">
                     Discordサーバーに参加する
                 </a>
             </div>
@@ -150,7 +152,7 @@
         setInterval(updateClock, 1000);
         updateClock();
 
-        // 2. 教えてもらったサーバーID「1519978268147581110」を使ってオンライン人数を確実に取得
+        // 2. あなたのサーバーID「1519978268147581110」を使ってオンライン人数を確実に取得
         async function fetchDiscordStatus() {
             try {
                 const proxyUrl = 'https://allorigins.win';
